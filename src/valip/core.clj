@@ -18,8 +18,8 @@
   (let [record (gensym "record")]
     `(extend-type ~type
        Validatable
-       (validate [~record]
-         (merge-with into
+       (~'validate [~record]
+         (merge-with concat
            ~@(for [[k & vs] validations, v vs]
                `(if-not (-> (~k ~record) ~v)
-                  {~k [~v]})))))))
+                  {~k '(~v)})))))))

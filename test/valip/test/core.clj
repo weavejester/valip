@@ -1,6 +1,16 @@
 (ns valip.test.core
-  (:use [valip.core] :reload)
-  (:use [clojure.test]))
+  (:use valip.core :reload)
+  (:use clojure.test))
 
-(deftest replace-me ;; FIXME: write
-  (is false "No tests have been written."))
+(defrecord Natural [n])
+
+(validations Natural
+  (:n (> 0)))
+
+(deftest test-valid?
+  (is (not (valid? (Natural. 0))))
+  (is (valid? (Natural. 10))))
+
+(deftest test-validate
+  (is (= (validate (Natural. 0))
+         {:n '((> 0))})))
