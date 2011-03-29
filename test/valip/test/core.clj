@@ -2,15 +2,10 @@
   (:use valip.core :reload)
   (:use clojure.test))
 
-(defrecord Natural [n])
-
-(validate-type Natural
-  (:n (> 0)))
-
-(deftest test-valid?
-  (is (not (valid? (Natural. 0))))
-  (is (valid? (Natural. 10))))
-
-(deftest test-validation-errors
-  (is (= (validation-errors (Natural. 0))
-         {:n '((> 0))})))
+(deftest validate-test
+  (is (= (validate {:x 17}
+           [:x (complement nil?) "must be present"]
+           [:y (complement nil?) "must be present"]
+           [:x #(> % 18) "must be greater than 18"])
+         {:x ["must be greater than 18"]
+          :y ["must be present"]})))

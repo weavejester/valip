@@ -1,25 +1,27 @@
 (ns valip.core
-  "Add validations to records.")
+  "Functional validations.")
 
-(defprotocol Validatable
-  (validation-errors [record]
-    "Returns a map of the record's keys mapped to a list of any validation
-    errors against them."))
+(defn validation-on
+  "Performs a validation on a key in a map using the supplied predicate
+  function. A {key [error]} map is returned if the validation fails; nil is
+  returned if the validation succeeds."
+  [key pred? error]
+  (fn [value-map]
+    (if-not (pred? (value-map key))
+      {key [error]})))
 
-(defn valid?
-  "True if the record has no validation errors, false otherwise."
-  [record]
-  (empty? (validation-errors record)))
+(defn merge-errors
+  "Merge error maps returned by from the validation-on function."
+  [& error-maps]
+  (apply merge-with into error-maps))
 
-(defmacro validate-type
-  "Add validations to an existing type. The type will be extended with the
-  Validatable protocol."
-  [type & validations]
-  (let [record (gensym "record")]
-    `(extend-type ~type
-       Validatable
-       (~'validation-errors [~record]
-         (merge-with concat
-           ~@(for [[k & vs] validations, v vs]
-               `(if-not (-> (~k ~record) ~v)
-                  {~k '(~v)})))))))
+(defn validate
+  "Validate a map of values using the supplied validations. Each validation
+  is represented as a vector containing [key predicate? error] values. A map
+  is returned for all the keys that failed their predicates, in the form:
+  {key [errors]}. If no predicates return false, nil is returned."
+  [value-map & validations]
+  (->> validations
+       (map (partial apply validation-on))
+       (map (fn [f] (f value-map)))
+       (apply merge-errors)))
