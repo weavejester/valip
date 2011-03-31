@@ -45,7 +45,7 @@
 (defn valid-email-domain?
   "Returns true if the domain of the supplied email address has a MX DNS entry."
   [email]
-  (let [domain (second (re-matches #".*@(.*)" email))]
+  (if-let [domain (second (re-matches #".*@(.*)" email))]
     (boolean (dns-lookup domain "MX"))))
 
 (defn integer-string?

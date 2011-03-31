@@ -12,6 +12,23 @@
   (is ((matches #"...") "foo"))
   (is (not ((matches #"...") "foobar"))))
 
+(deftest test-email-address?
+  (is (email-address? "foo@example.com"))
+  (is (email-address? "foo+bar@example.com"))
+  (is (email-address? "foo-bar@example.com"))
+  (is (email-address? "foo.bar@example.com"))
+  (is (email-address? "foo@example.co.uk"))
+  (is (not (email-address? "foo")))
+  (is (not (email-address? "foo@bar")))
+  (is (not (email-address? "foo bar@example.com")))
+  (is (not (email-address? "foo@foo_bar.com"))))
+
+(deftest test-valid-email-domain?
+  (is (valid-email-domain? "example@google.com"))
+  (is (not (valid-email-domain? "foo@example.com")))
+  (is (not (valid-email-domain? "foo@google.com.nospam")))
+  (is (not (valid-email-domain? "foo"))))
+
 (deftest test-integer-string?
   (is (integer-string? "10"))
   (is (integer-string? "-9"))
