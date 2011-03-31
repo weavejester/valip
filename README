@@ -1,17 +1,58 @@
-# valip
+# Valip
 
-FIXME: write description
+Valip is a validation library for Clojure. It is primarily designed to validate
+keyword-string maps, such as one might get from a HTML form.
 
-## Usage
+# Installation
 
-FIXME: write
+Add the following dependency to your `project.clj` file:
 
-## Installation
+    [valip "0.1.0"]
 
-FIXME: write
+# Usage
 
-## License
+The main validation function is `valip.core/validate`. It uses the following
+syntax:
 
-Copyright (C) 2010 FIXME
+    (validate map-of-values
+      [key1 predicate1 error1]
+      [key2 predicate2 error2]
+      ...
+      [keyn predicaten errorn])
 
-Distributed under the Eclipse Public License, the same as Clojure.
+For each vector, the key is used to look up a value in the map. The map value
+is then tested with the predicate function. If the predicate fails, the error
+message is included in the map of errors returned by the `validate` function. A
+key may be tested multiple times with different predicates and errors.
+
+If no predicate fails, `nil` is returned. If at least one predicate fails, a
+map of keys to errors is returned:
+
+    {key1 [error1]
+     key2 [error2]
+     ...
+     keyn [errorn]}
+
+The errors are listed in a vector, because there may be multiple errors for the
+same key.
+
+For example:
+
+    (use 'valip.core 'valip.predicates)
+
+    (def user
+      {:name "Alice", :age 7})
+
+    (validate user
+      [:name present? "must be present"]
+      [:age present? "must be present"]
+      [:age (gte 18) "must be over 18"])
+
+    => {:age ["must be over 18"])
+
+# Predicates
+
+Valip has a number of useful predicates and functions that generate predicates.
+More of these useful predicates will be added as the library matures.
+
+You can find these predicates in the `valip.predicates` namespace.
