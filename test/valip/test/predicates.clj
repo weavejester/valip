@@ -12,6 +12,27 @@
   (is ((matches #"...") "foo"))
   (is (not ((matches #"...") "foobar"))))
 
+(deftest test-integer-string?
+  (is (integer-string? "10"))
+  (is (integer-string? "-9"))
+  (is (integer-string? "0"))
+  (is (integer-string? "  8  "))
+  (is (integer-string? "10,000"))
+  (is (not (integer-string? "foo")))
+  (is (not (integer-string? "10x")))
+  (is (not (integer-string? "1.1"))))
+
+(deftest test-integer-string?
+  (is (decimal-string? "10"))
+  (is (decimal-string? "-9"))
+  (is (decimal-string? "0"))
+  (is (decimal-string? "  8  "))
+  (is (decimal-string? "10,000"))
+  (is (decimal-string? "1.1"))
+  (is (decimal-string? "3.14159"))
+  (is (not (decimal-string? "foo")))
+  (is (not (decimal-string? "10x"))))
+
 (deftest test-gt
   (is ((gt 10) "11"))
   (is (not ((gt 10) "9")))

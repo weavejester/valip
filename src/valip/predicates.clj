@@ -1,8 +1,10 @@
 (ns valip.predicates
   "Predicates useful for validating input strings, such as ones from a HTML
   form."
-  (:import java.text.NumberFormat)
-  (:require [clojure.string :as string]))
+  (:require [clojure.string :as string])
+  (:import
+    [org.apache.commons.validator.routines IntegerValidator
+                                           DoubleValidator]))
 
 (defn present?
   "Returns false if x is nil or blank, true otherwise."
@@ -15,9 +17,19 @@
   [re]
   (fn [s] (boolean (re-matches re s))))
 
+(defn integer-string?
+  "Returns true if the string represents an integer."
+  [s]
+  (boolean (. (IntegerValidator.) (validate s))))
+
+(defn decimal-string?
+  "Returns true if the string represents a decimal number."
+  [s]
+  (boolean (. (DoubleValidator.) (validate s))))
+
 (defn- parse-number [x]
   (if (string? x)
-    (. (NumberFormat/getInstance) (parse x))
+    (. (DoubleValidator.) (validate x))
     x))
 
 (defn gt
