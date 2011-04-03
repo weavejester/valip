@@ -7,7 +7,7 @@ keyword-string maps, such as one might get from a HTML form.
 
 Add the following dependency to your `project.clj` file:
 
-    [valip "0.1.0"]
+    [valip "0.2.0"]
 
 # Usage
 
@@ -46,7 +46,7 @@ For example:
     (validate user
       [:name present? "must be present"]
       [:age present? "must be present"]
-      [:age (gte 18) "must be over 18"])
+      [:age (over 18) "must be over 18"])
 
     => {:age ["must be over 18"])
 
