@@ -3,6 +3,7 @@
   form."
   (:require [clojure.string :as string])
   (:import
+    [java.net URL MalformedURLException]
     java.util.Hashtable
     javax.naming.NamingException
     javax.naming.directory.InitialDirContext
@@ -47,6 +48,18 @@
   [email]
   (if-let [domain (second (re-matches #".*@(.*)" email))]
     (boolean (dns-lookup domain "MX"))))
+
+(defn url?
+  "Returns true if the string is a valid URL."
+  [s]
+  (try
+    (URL. s) true
+    (catch MalformedURLException _ false)))
+
+(defn digits?
+  "Returns true if a string consists only of numerical digits."
+  [s]
+  (boolean (re-matches #"\d+" s)))
 
 (defn integer-string?
   "Returns true if the string represents an integer."
