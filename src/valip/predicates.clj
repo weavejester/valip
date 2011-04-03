@@ -116,6 +116,10 @@
 
 (def ^{:doc "Alias for lt"} under lt)
 
+(def ^{:doc "Alias for gte"} at-least gte)
+
+(def ^{:doc "Alias for lte"} at-most lte)
+
 (defn between
   "Creates a predicate function for checking whether a number is between two
   values (inclusive)."

@@ -94,6 +94,12 @@
 (deftest test-under
   (is (= under lt)))
 
+(deftest test-at-least
+  (is (= at-least gte)))
+
+(deftest test-at-most
+  (is (= at-most lte)))
+
 (deftest test-between
   (is ((between 1 10) "5"))
   (is ((between 1 10) "1"))
