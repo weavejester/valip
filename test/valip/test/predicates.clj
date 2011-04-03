@@ -12,6 +12,16 @@
   (is ((matches #"...") "foo"))
   (is (not ((matches #"...") "foobar"))))
 
+(deftest test-max-length
+  (is ((max-length 5) "hello"))
+  (is ((max-length 5) "hi"))
+  (is (not ((max-length 5) "hello world"))))
+
+(deftest test-max-length
+  (is ((min-length 5) "hello"))
+  (is ((min-length 5) "hello world"))
+  (is (not ((min-length 5) "hi"))))
+
 (deftest test-email-address?
   (is (email-address? "foo@example.com"))
   (is (email-address? "foo+bar@example.com"))
@@ -28,6 +38,14 @@
   (is (not (valid-email-domain? "foo@example.com")))
   (is (not (valid-email-domain? "foo@google.com.nospam")))
   (is (not (valid-email-domain? "foo"))))
+
+(deftest test-url?
+  (is (url? "http://google.com"))
+  (is (not (url? "foobar"))))
+
+(deftest test-digits?
+  (is (digits? "01234"))
+  (is (not (digits? "04xa"))))
 
 (deftest test-integer-string?
   (is (integer-string? "10"))

@@ -16,10 +16,22 @@
   (not (string/blank? x)))
 
 (defn matches
-  "Returns a predicate that returns true if the supplied regular expression
+  "Creates a predicate that returns true if the supplied regular expression
   matches its argument."
   [re]
   (fn [s] (boolean (re-matches re s))))
+
+(defn max-length
+  "Creates a predicate that returns true if a string's length is less than or
+  equal to the supplied maximum."
+  [max]
+  (fn [s] (<= (count s) max)))
+
+(defn min-length
+  "Creates a predicate that returns true if a string's length is greater than
+  or equal to the supplied minimum."
+  [min]
+  (fn [s] (>= (count s) min)))
 
 (defn email-address?
   "Returns true if the email address is valid, based on RFC 2822. Email
