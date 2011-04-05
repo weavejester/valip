@@ -1,7 +1,8 @@
 (ns valip.predicates
   "Predicates useful for validating input strings, such as ones from a HTML
   form."
-  (:require [clojure.string :as string])
+  (:require [clojure.string :as string]
+            [clj-time.format :as time-format])
   (:import
     [java.net URL MalformedURLException]
     java.util.Hashtable
@@ -73,6 +74,11 @@
   [s]
   (boolean (re-matches #"\d+" s)))
 
+(defn alphanumeric?
+  "Returns true if a string consists only of alphanumeric characters."
+  [s]
+  (boolean (re-matches #"[A-Za-z0-9]+")))
+
 (defn integer-string?
   "Returns true if the string represents an integer."
   [s]
@@ -127,3 +133,20 @@
   (fn [x]
     (let [x (parse-number x)]
       (and (>= x min) (<= x max)))))
+
+(defn- parse-date-time [format input]
+  (let [formatter (time-format/formatter format)]
+    (try
+      (time-format/parse formatter input)
+      (catch IllegalArgumentException _ nil))))
+
+(defn date-format
+  "Creates a function for parsing a date using the supplied format string."
+  [format]
+  (partial parse-date-time format))
+
+(defn html5-date?
+  "Returns true if the string is one that could be returned by a HTML5 date
+  input element."
+  [s]
+  (boolean (parse-date-time "yyyy-MM-dd" s)))
