@@ -40,6 +40,7 @@
   invalid, as this syntax is not commonly supported in practise. The domain of
   the email address is not checked for validity."
   [email]
+  {:pre [(present? email)]}
   (let [re (str "(?i)[a-z0-9!#$%&'*+/=?^_`{|}~-]+"
                 "(?:\\.[a-z0-9!#$%&'*+/=?" "^_`{|}~-]+)*"
                 "@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+"
@@ -59,12 +60,14 @@
 (defn valid-email-domain?
   "Returns true if the domain of the supplied email address has a MX DNS entry."
   [email]
+  {:pre [(email-address? email)]}
   (if-let [domain (second (re-matches #".*@(.*)" email))]
     (boolean (dns-lookup domain "MX"))))
 
 (defn url?
   "Returns true if the string is a valid URL."
   [s]
+  {:pre [(present? s)]}
   (try
     (URL. s) true
     (catch MalformedURLException _ false)))
@@ -72,24 +75,29 @@
 (defn digits?
   "Returns true if a string consists only of numerical digits."
   [s]
+  {:pre [(present? s)]}
   (boolean (re-matches #"\d+" s)))
 
 (defn alphanumeric?
   "Returns true if a string consists only of alphanumeric characters."
   [s]
+  {:pre [(present? s)]}
   (boolean (re-matches #"[A-Za-z0-9]+")))
 
 (defn integer-string?
   "Returns true if the string represents an integer."
   [s]
+  {:pre [(present? s)]}
   (boolean (.validate (IntegerValidator.) s)))
 
 (defn decimal-string?
   "Returns true if the string represents a decimal number."
   [s]
+  {:pre [(present? s)]}
   (boolean (.validate (DoubleValidator.) s)))
 
 (defn- parse-number [x]
+  {:pre [(present? x)]}
   (if (string? x)
     (.validate (DoubleValidator.) x)
     x))
@@ -135,6 +143,7 @@
       (and (>= x min) (<= x max)))))
 
 (defn- parse-date-time [format input]
+  {:pre [(present? input)]}
   (let [formatter (time-format/formatter format)]
     (try
       (time-format/parse formatter input)
