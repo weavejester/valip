@@ -56,3 +56,9 @@ Valip has a number of useful predicates and functions that generate predicates.
 More of these useful predicates will be added as the library matures.
 
 You can find these predicates in the `valip.predicates` namespace.
+
+## License
+
+Copyright © 2012 James Reeves
+
+Distributed under the Eclipse Public License, the same as Clojure.
