@@ -15,3 +15,10 @@
            [:x #(> % 18) "must be greater than 18"])
          {:x ["must be greater than 18"]
           :y ["must be present"]})))
+
+(deftest validate-key-as-fn
+  (is (= (validate {:password "secret" :confirm-password ""}
+                   [identity #(apply = (map % [:password :confirm-password])) "passwords must match"])
+         {:* ["passwords must match"]}))
+  (is (nil? (validate {:password "secret" :confirm-password "secret"}
+                      [#(map % [:password :confirm-password]) #(apply = %) "passwords must match"]))))
